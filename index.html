@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traducteur Wolof</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="logo">Traducteur <span class="wolof">Wolof</span></h1>
+            <p class="subtitle">Traduction instantanée Wolof ↔ Français/Anglais</p>
+        </header>
+
+        <main>
+            <div class="translation-card">
+                <div class="input-section">
+                    <div class="direction-selector">
+                        <select id="direction">
+                            <option value="wolof-fr">Wolof → Français</option>
+                            <option value="fr-wolof">Français → Wolof</option>
+                            <option value="wolof-en">Wolof → Anglais</option>
+                            <option value="en-wolof">Anglais → Wolof</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-container">
+                        <input type="text" id="input-text" placeholder="Tapez votre mot ou phrase ici...">
+                        <div id="suggestions" class="suggestions"></div>
+                    </div>
+                    
+                    <button id="translate-btn" class="translate-btn">Traduire</button>
+                    <button id="speak-btn" class="speak-btn" title="Prononcer">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M11.536 14.01A8.473 8.473 0 0 0 14.026 8a8.473 8.473 0 0 0-2.49-6.01l-.708.707A7.476 7.476 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303l.708.707z"/>
+                            <path d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.483 5.483 0 0 1 11.025 8a5.483 5.483 0 0 1-1.61 3.89l.706.706z"/>
+                            <path d="M8.707 11.182A4.486 4.486 0 0 0 10.025 8a4.486 4.486 0 0 0-1.318-3.182L8 5.525A3.489 3.489 0 0 1 9.025 8 3.49 3.49 0 0 1 8 10.475l.707.707zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06z"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="output-section">
+                    <div id="output-text" class="output-text"></div>
+                    <div class="output-actions">
+                        <button id="copy-btn" class="action-btn">Copier</button>
+                        <button id="favorite-btn" class="action-btn">Favori</button>
+                        <button id="speak-output-btn" class="action-btn">Prononcer</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="history-section">
+                <div class="tabs">
+                    <button class="tab active" data-tab="history">Historique</button>
+                    <button class="tab" data-tab="favorites">Favoris</button>
+                    <button class="tab" data-tab="quiz">Quiz</button>
+                </div>
+                
+                <div id="history-content" class="tab-content active">
+                    <ul id="history-list" class="history-list"></ul>
+                </div>
+                
+                <div id="favorites-content" class="tab-content">
+                    <ul id="favorites-list" class="history-list"></ul>
+                </div>
+                
+                <div id="quiz-content" class="tab-content">
+                    <div class="quiz-container">
+                        <div id="quiz-question" class="quiz-question"></div>
+                        <div id="quiz-options" class="quiz-options"></div>
+                        <div class="quiz-stats">
+                            <span id="quiz-score">Score: 0</span>
+                            <span id="quiz-streak">Série: 0</span>
+                        </div>
+                        <button id="quiz-next" class="quiz-next">Question suivante</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>Application 100% offline - Inspirée des couleurs du drapeau sénégalais</p>
+        </footer>
+    </div>
+
+    <script src="dictionnaire.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
