@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Politique de Confidentialité - Traducteur Wolof</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+        }
+
+        h1 {
+            color: #27ae60;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .last-updated {
+            color: #666;
+            font-style: italic;
+        }
+
+        .content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #27ae60;
+            margin: 2rem 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        h2:first-child {
+            margin-top: 0;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        ul {
+            margin: 1rem 0;
+            padding-left: 2rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-left: 4px solid #e74c3c;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem 0;
+            color: #666;
+            border-top: 1px solid #ddd;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: #27ae60;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-top: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #219a52;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Politique de Confidentialité</h1>
+            <p class="last-updated">Dernière mise à jour : <span id="currentDate"></span></p>
+        </header>
+
+        <div class="content">
+            <h2>1. Collecte des Informations</h2>
+            <p>Notre application de traduction wolof collecte uniquement les informations nécessaires à son fonctionnement :</p>
+            <ul>
+                <li>Texte saisi pour traduction</li>
+                <li>Choix de langue source (français ou anglais)</li>
+               
+            </ul>
+
+            <div class="highlight">
+                <strong>Important :</strong> Toutes les traductions sont effectuées localement dans votre navigateur. Aucune donnée n'est envoyée à nos serveurs.
+            </div>
+
+            <h2>2. Utilisation des Informations</h2>
+            <p>Les informations collectées sont utilisées uniquement pour :</p>
+            <ul>
+                <li>Fournir les services de traduction</li>
+                <li>Améliorer l'expérience utilisateur</li>
+                 
+            </ul>
+
+            <h2>3. Stockage des Données</h2>
+            <p>Vos données sont stockées localement sur votre appareil et ne sont pas transmises à des serveurs externes. Le dictionnaire de traduction est intégré à l'application.</p>
+
+            <h2>4. Cookies</h2>
+            <p>Notre application n'utilise pas de cookies de suivi. Seuls les cookies techniques nécessaires au fonctionnement peuvent être utilisés.</p>
+
+            <h2>5. Sécurité</h2>
+            <p>Nous mettons en œuvre des mesures de sécurité standard pour protéger vos informations. Cependant, comme tout traitement en ligne, aucune méthode n'est infaillible à 100%.</p>
+
+            <h2>6. Vos Droits</h2>
+            <p>Vous avez le droit de :</p>
+            <ul>
+                <li>Accéder à vos données</li>
+                <li>Supprimer vos données</li>
+                <li>Retirer votre consentement à tout moment</li>
+            </ul>
+
+            
+
+            <h2>7. Modifications</h2>
+            <p>Nous nous réservons le droit de modifier cette politique de confidentialité. Les changements seront indiqués sur cette page avec la date de mise à jour.</p>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 Traducteur Wolof. Tous droits réservés.</p>
+            <a href="index.html" class="back-btn">Retour à l'application</a>
+        </footer>
+    </div>
+
+    <script>
+        // Afficher la date actuelle
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('fr-FR');
+        
+        // Animation simple au défilement
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observer les sections
+        document.querySelectorAll('h2').forEach((section) => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
