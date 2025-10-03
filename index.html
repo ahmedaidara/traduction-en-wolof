@@ -3,88 +3,725 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Traducteur Wolof</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Traducteur Français/Anglais - Wolof</title>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #4fc3a1;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem;
+            color: var(--dark-color);
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        header {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .translator-section {
+            padding: 2rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+        }
+
+        select, textarea {
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.2);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .translate-btn, .voice-btn {
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            flex: 1;
+        }
+
+        .translate-btn {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        }
+
+        .voice-btn {
+            background: linear-gradient(to right, var(--accent-color), #3aa888);
+        }
+
+        .translate-btn:hover, .voice-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .translate-btn:active, .voice-btn:active {
+            transform: translateY(0);
+        }
+
+        .voice-btn.listening {
+            background: linear-gradient(to right, #e74c3c, #c0392b);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .result-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .result-title {
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .result-text {
+            font-size: 1.1rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .speak-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .speak-btn:hover {
+            background: #3aa888;
+            transform: scale(1.1);
+        }
+
+        .dictionary-section {
+            padding: 2rem;
+            background-color: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+            text-align: center;
+        }
+
+        .search-container {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+
+        .dictionary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+
+        .dictionary-item {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+        }
+
+        .dictionary-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .wolof-word {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .translation {
+            font-size: 0.9rem;
+            color: var(--dark-color);
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                border-radius: 12px;
+            }
+            
+            header, .translator-section, .dictionary-section {
+                padding: 1.5rem;
+            }
+            
+            .dictionary-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1 class="logo">Traducteur <span class="wolof">Wolof</span></h1>
-            <p class="subtitle">Traduction instantanée Wolof ↔ Français/Anglais</p>
+            <h1>Traducteur Wolof</h1>
+            <p class="subtitle">Traduisez du français ou de l'anglais vers le wolof</p>
         </header>
-
-        <main>
-            <div class="translation-card">
-                <div class="input-section">
-                    <div class="direction-selector">
-                        <select id="direction">
-                            <option value="wolof-fr">Wolof → Français</option>
-                            <option value="fr-wolof">Français → Wolof</option>
-                            <option value="wolof-en">Wolof → Anglais</option>
-                            <option value="en-wolof">Anglais → Wolof</option>
-                        </select>
-                    </div>
-                    
-                    <div class="input-container">
-                        <input type="text" id="input-text" placeholder="Tapez votre mot ou phrase ici...">
-                        <div id="suggestions" class="suggestions"></div>
-                    </div>
-                    
-                    <button id="translate-btn" class="translate-btn">Traduire</button>
-                    <button id="speak-btn" class="speak-btn" title="Prononcer">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M11.536 14.01A8.473 8.473 0 0 0 14.026 8a8.473 8.473 0 0 0-2.49-6.01l-.708.707A7.476 7.476 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303l.708.707z"/>
-                            <path d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.483 5.483 0 0 1 11.025 8a5.483 5.483 0 0 1-1.61 3.89l.706.706z"/>
-                            <path d="M8.707 11.182A4.486 4.486 0 0 0 10.025 8a4.486 4.486 0 0 0-1.318-3.182L8 5.525A3.489 3.489 0 0 1 9.025 8 3.49 3.49 0 0 1 8 10.475l.707.707zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06z"/>
+        
+        <section class="translator-section">
+            <div class="input-group">
+                <label for="sourceLang">Langue source</label>
+                <select id="sourceLang">
+                    <option value="francais">Français</option>
+                    <option value="anglais">Anglais</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label for="inputText">Texte à traduire</label>
+                <textarea id="inputText" placeholder="Entrez votre texte ici..."></textarea>
+            </div>
+            
+            <div class="controls">
+                <button class="translate-btn" id="translateBtn">
+                    <span>Traduire</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L14 7H10L12 2Z" fill="currentColor"/>
+                        <path d="M17 9L22 10L19 14L20 20L15 17L10 20L11 14L8 10L13 9H17Z" fill="currentColor"/>
+                        <path d="M2 14L7 13L4 17L5 23L0 20L2 14Z" fill="currentColor"/>
+                    </svg>
+                </button>
+                
+                <button class="voice-btn" id="voiceBtn">
+                    <span>Parler pour traduire</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 15C13.6569 15 15 13.6569 15 12V5C15 3.34315 13.6569 2 12 2C10.3431 2 9 3.34315 9 5V12C9 13.6569 10.3431 15 12 15Z" fill="currentColor"/>
+                        <path d="M19 12C19 15.866 15.866 19 12 19C8.13401 19 5 15.866 5 12" stroke="currentColor" stroke-width="2"/>
+                        <path d="M12 19V22" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="result-container">
+                <div class="result-title">
+                    <span>Traduction en Wolof</span>
+                    <button class="speak-btn" id="speakBtn" title="Écouter la traduction">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 9V15H7L12 20V4L7 9H3Z" fill="currentColor"/>
+                            <path d="M16.5 12C16.5 10.23 15.48 8.71 14 7.97V16.02C15.48 15.29 16.5 13.77 16.5 12Z" fill="currentColor"/>
+                            <path d="M19 12C19 8.13 15.87 5 12 5V7C14.76 7 17 9.24 17 12C17 14.76 14.76 17 12 17V19C15.87 19 19 15.87 19 12Z" fill="currentColor"/>
                         </svg>
                     </button>
                 </div>
-                
-                <div class="output-section">
-                    <div id="output-text" class="output-text"></div>
-                    <div class="output-actions">
-                        <button id="copy-btn" class="action-btn">Copier</button>
-                        <button id="favorite-btn" class="action-btn">Favori</button>
-                        <button id="speak-output-btn" class="action-btn">Prononcer</button>
-                    </div>
-                </div>
+                <div class="result-text" id="resultText">La traduction apparaîtra ici...</div>
+            </div>
+        </section>
+        
+        <section class="dictionary-section">
+            <h2 class="section-title">Dictionnaire Wolof</h2>
+            
+            <div class="search-container">
+                <input type="text" class="search-input" id="searchInput" placeholder="Rechercher un mot...">
+                <span class="search-icon">🔍</span>
             </div>
             
-            <div class="history-section">
-                <div class="tabs">
-                    <button class="tab active" data-tab="history">Historique</button>
-                    <button class="tab" data-tab="favorites">Favoris</button>
-                    <button class="tab" data-tab="quiz">Quiz</button>
-                </div>
-                
-                <div id="history-content" class="tab-content active">
-                    <ul id="history-list" class="history-list"></ul>
-                </div>
-                
-                <div id="favorites-content" class="tab-content">
-                    <ul id="favorites-list" class="history-list"></ul>
-                </div>
-                
-                <div id="quiz-content" class="tab-content">
-                    <div class="quiz-container">
-                        <div id="quiz-question" class="quiz-question"></div>
-                        <div id="quiz-options" class="quiz-options"></div>
-                        <div class="quiz-stats">
-                            <span id="quiz-score">Score: 0</span>
-                            <span id="quiz-streak">Série: 0</span>
-                        </div>
-                        <button id="quiz-next" class="quiz-next">Question suivante</button>
-                    </div>
-                </div>
+            <div class="dictionary-grid" id="dictionaryGrid">
+                <!-- Les éléments du dictionnaire seront ajoutés ici par JavaScript -->
             </div>
-        </main>
+        </section>
         
         <footer>
-            <p>Application 100% offline - Inspirée des couleurs du drapeau sénégalais</p>
+            <p>Traducteur Français/Anglais - Wolof © 2023</p>
         </footer>
     </div>
 
-    <script src="dictionnaire.js"></script>
-    <script src="app.js"></script>
+    <script>
+        // Dictionnaire Wolof-Français-Anglais
+        const dictionnaire = [
+            { wolof: "salaam aleekum", francais: "bonjour (salutation islamique)", anglais: "hello (Islamic greeting)" },
+            { wolof: "na nga def", francais: "comment vas-tu", anglais: "how are you" },
+            { wolof: "maangi fi", francais: "je vais bien", anglais: "I'm fine" },
+            { wolof: "jërejëf", francais: "merci", anglais: "thank you" },
+            { wolof: "waaw", francais: "oui", anglais: "yes" },
+            { wolof: "déedéet", francais: "non", anglais: "no" },
+            { wolof: "ba beneen", francais: "à bientôt", anglais: "see you soon" },
+            { wolof: "ci jamm", francais: "au revoir", anglais: "goodbye" },
+            { wolof: "nit", francais: "personne", anglais: "person" },
+            { wolof: "jigéen", francais: "femme", anglais: "woman" },
+            { wolof: "góor", francais: "homme", anglais: "man" },
+            { wolof: "xale", francais: "enfant", anglais: "child" },
+            { wolof: "mag", francais: "frère/sœur aîné(e)", anglais: "older brother/sister" },
+            { wolof: "rakk", francais: "frère/sœur cadet(te)", anglais: "younger brother/sister" },
+            { wolof: "ndey", francais: "mère", anglais: "mother" },
+            { wolof: "baay", francais: "père", anglais: "father" },
+            { wolof: "lëk", francais: "manger", anglais: "to eat" },
+            { wolof: "naan", francais: "boire", anglais: "to drink" },
+            { wolof: "dellu", francais: "retourner", anglais: "to return" },
+            { wolof: "dem", francais: "aller", anglais: "to go" },
+            { wolof: "jàng", francais: "étudier", anglais: "to study" },
+            { wolof: "liggéey", francais: "travailler", anglais: "to work" },
+            { wolof: "togg", francais: "cuisiner", anglais: "to cook" },
+            { wolof: "xool", francais: "regarder", anglais: "to look" },
+            { wolof: "dégg", francais: "écouter", anglais: "to listen" },
+            { wolof: "wax", francais: "parler", anglais: "to speak" },
+            { wolof: "gëm", francais: "croire", anglais: "to believe" },
+            { wolof: "xam", francais: "savoir", anglais: "to know" },
+            { wolof: "bes", francais: "suffire", anglais: "to be enough" },
+            { wolof: "bëgg", francais: "aimer", anglais: "to love" },
+            { wolof: "sopp", francais: "détester", anglais: "to hate" },
+            { wolof: "génn", francais: "sortir", anglais: "to go out" },
+            { wolof: "dëkk", francais: "habiter", anglais: "to live (reside)" },
+            { wolof: "dëgg", francais: "vérité", anglais: "truth" },
+            { wolof: "dollar", francais: "argent", anglais: "money" },
+            { wolof: "kër", francais: "maison", anglais: "house" },
+            { wolof: "neeg", francais: "mariage", anglais: "wedding" },
+            { wolof: "jàng", francais: "école", anglais: "school" },
+            { wolof: "tëre", francais: "livre", anglais: "book" },
+            { wolof: "kayit", francais: "papier", anglais: "paper" },
+            { wolof: "bunt", francais: "porte", anglais: "door" },
+            { wolof: "palanteer", francais: "fenêtre", anglais: "window" },
+            { wolof: "kangu", francais: "chaise", anglais: "chair" },
+            { wolof: "tabël", francais: "table", anglais: "table" },
+            { wolof: "lal", francais: "lit", anglais: "bed" },
+            { wolof: "mbët", francais: "vêtement", anglais: "clothing" },
+            { wolof: "sapato", francais: "chaussure", anglais: "shoe" },
+            { wolof: "njar", francais: "pluie", anglais: "rain" },
+            { wolof: "ndox", francais: "eau", anglais: "water" },
+            { wolof: "safara", francais: "nourriture", anglais: "food" },
+            { wolof: "ceeb", francais: "riz", anglais: "rice" },
+            { wolof: "mburu", francais: "pain", anglais: "bread" },
+            { wolof: "meew", francais: "poisson", anglais: "fish" },
+            { wolof: "yapp", francais: "viande", anglais: "meat" },
+            { wolof: "weñ", francais: "arachide", anglais: "peanut" },
+            { wolof: "fonde", francais: "maïs", anglais: "corn" },
+            { wolof: "bant", francais: "sel", anglais: "salt" },
+            { wolof: "suukër", francais: "sucre", anglais: "sugar" },
+            { wolof: "nettali", francais: "thé", anglais: "tea" },
+            { wolof: "kafe", francais: "café", anglais: "coffee" },
+            { wolof: "dinaar", francais: "repas", anglais: "meal" },
+            { wolof: "tangan", francais: "faim", anglais: "hunger" },
+            { wolof: "mar", francais: "soif", anglais: "thirst" },
+            { wolof: "wër", francais: "tourner", anglais: "to turn" },
+            { wolof: "dogg", francais: "entrer", anglais: "to enter" },
+            { wolof: "daan", francais: "se lever", anglais: "to get up" },
+            { wolof: "sëq", francais: "se coucher", anglais: "to lie down" },
+            { wolof: "góor-góor", francais: "lentement", anglais: "slowly" },
+            { wolof: "yéeg", francais: "rapide", anglais: "fast" },
+            { wolof: "gudd", francais: "long", anglais: "long" },
+            { wolof: "taw", francais: "court", anglais: "short" },
+            { wolof: "weex", francais: "blanc", anglais: "white" },
+            { wolof: "noon", francais: "noir", anglais: "black" },
+            { wolof: "bun", francais: "rouge", anglais: "red" },
+            { wolof: "baxa", francais: "vert", anglais: "green" },
+            { wolof: "mboq", francais: "jaune", anglais: "yellow" },
+            { wolof: "bulé", francais: "bleu", anglais: "blue" },
+            { wolof: "xonq", francais: "marron", anglais: "brown" },
+            { wolof: "xawa", francais: "gris", anglais: "gray" },
+            { wolof: "baax", francais: "grand", anglais: "big" },
+            { wolof: "tuuti", francais: "petit", anglais: "small" },
+            { wolof: "dëgër", francais: "fort", anglais: "strong" },
+            { wolof: "wóor", francais: "lourd", anglais: "heavy" },
+            { wolof: "yomb", francais: "léger", anglais: "light" },
+            { wolof: "seetsi", francais: "beau", anglais: "beautiful" },
+            { wolof: "bon", francais: "mauvais", anglais: "bad" },
+            { wolof: "baax", francais: "bon", anglais: "good" },
+            { wolof: "xel", francais: "intelligent", anglais: "intelligent" },
+            { wolof: "góor", francais: "courageux", anglais: "brave" },
+            { wolof: "sago", francais: "malade", anglais: "sick" },
+            { wolof: "wér", francais: "propre", anglais: "clean" },
+            { wolof: "ndaw", francais: "sale", anglais: "dirty" },
+            { wolof: "sori", francais: "chaud", anglais: "hot" },
+            { wolof: "seetal", francais: "froid", anglais: "cold" },
+            { wolof: "dara", francais: "rien", anglais: "nothing" },
+            { wolof: "lépp", francais: "tout", anglais: "everything" },
+            { wolof: "keneen", francais: "quelqu'un", anglais: "someone" },
+            { wolof: "fan", francais: "où", anglais: "where" },
+            { wolof: "kan", francais: "qui", anglais: "who" },
+            { wolof: "lan", francais: "quoi", anglais: "what" },
+            { wolof: "nga", francais: "tu", anglais: "you" },
+            { wolof: "ma", francais: "je", anglais: "I" },
+            { wolof: "mu", francais: "il/elle", anglais: "he/she" },
+            { wolof: "ñun", francais: "nous", anglais: "we" },
+            { wolof: "yéen", francais: "vous", anglais: "you (plural)" },
+            { wolof: "ñu", francais: "ils/elles", anglais: "they" },
+            { wolof: "sama", francais: "mon", anglais: "my" },
+            { wolof: "sa", francais: "ton", anglais: "your" },
+            { wolof: "samay", francais: "mes", anglais: "my (plural)" },
+            { wolof: "say", francais: "tes", anglais: "your (plural)" },
+            { wolof: "bi", francais: "le/la (défini)", anglais: "the" },
+            { wolof: "yi", francais: "les (défini)", anglais: "the (plural)" },
+            { wolof: "benn", francais: "un", anglais: "one" },
+            { wolof: "ñaar", francais: "deux", anglais: "two" },
+            { wolof: "nett", francais: "trois", anglais: "three" },
+            { wolof: "ñeent", francais: "quatre", anglais: "four" },
+            { wolof: "juróom", francais: "cinq", anglais: "five" },
+            { wolof: "juróom-benn", francais: "six", anglais: "six" },
+            { wolof: "juróom-ñaar", francais: "sept", anglais: "seven" },
+            { wolof: "juróom-nett", francais: "huit", anglais: "eight" },
+            { wolof: "juróom-ñeent", francais: "neuf", anglais: "nine" },
+            { wolof: "fukk", francais: "dix", anglais: "ten" }
+        ];
+
+        // Éléments DOM
+        const sourceLangSelect = document.getElementById('sourceLang');
+        const inputText = document.getElementById('inputText');
+        const translateBtn = document.getElementById('translateBtn');
+        const voiceBtn = document.getElementById('voiceBtn');
+        const speakBtn = document.getElementById('speakBtn');
+        const resultText = document.getElementById('resultText');
+        const searchInput = document.getElementById('searchInput');
+        const dictionaryGrid = document.getElementById('dictionaryGrid');
+
+        // Variables pour la reconnaissance vocale
+        let recognition = null;
+        let isListening = false;
+
+        // Initialiser la reconnaissance vocale
+        function initSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = sourceLangSelect.value === 'francais' ? 'fr-FR' : 'en-US';
+                
+                recognition.onstart = function() {
+                    isListening = true;
+                    voiceBtn.classList.add('listening');
+                    voiceBtn.innerHTML = '<span>Écoute en cours...</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 6L18 18M6 18L18 6" stroke="currentColor" stroke-width="2"/></svg>';
+                };
+                
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    inputText.value = transcript;
+                    translateText();
+                };
+                
+                recognition.onend = function() {
+                    isListening = false;
+                    voiceBtn.classList.remove('listening');
+                    voiceBtn.innerHTML = '<span>Parler pour traduire</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 15C13.6569 15 15 13.6569 15 12V5C15 3.34315 13.6569 2 12 2C10.3431 2 9 3.34315 9 5V12C9 13.6569 10.3431 15 12 15Z" fill="currentColor"/><path d="M19 12C19 15.866 15.866 19 12 19C8.13401 19 5 15.866 5 12" stroke="currentColor" stroke-width="2"/><path d="M12 19V22" stroke="currentColor" stroke-width="2"/></svg>';
+                };
+                
+                recognition.onerror = function(event) {
+                    console.error('Erreur de reconnaissance vocale:', event.error);
+                    isListening = false;
+                    voiceBtn.classList.remove('listening');
+                    voiceBtn.innerHTML = '<span>Parler pour traduire</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 15C13.6569 15 15 13.6569 15 12V5C15 3.34315 13.6569 2 12 2C10.3431 2 9 3.34315 9 5V12C9 13.6569 10.3431 15 12 15Z" fill="currentColor"/><path d="M19 12C19 15.866 15.866 19 12 19C8.13401 19 5 15.866 5 12" stroke="currentColor" stroke-width="2"/><path d="M12 19V22" stroke="currentColor" stroke-width="2"/></svg>';
+                    
+                    if (event.error === 'not-allowed') {
+                        alert('La reconnaissance vocale n\'est pas autorisée. Veuillez vérifier les paramètres de votre navigateur.');
+                    }
+                };
+            } else {
+                voiceBtn.disabled = true;
+                voiceBtn.innerHTML = '<span>Reconnaissance vocale non supportée</span>';
+                console.warn('La reconnaissance vocale n\'est pas supportée par ce navigateur.');
+            }
+        }
+
+        // Fonction pour traduire un texte long
+        function translateLongText(text, sourceLang) {
+            // Diviser le texte en phrases
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim() !== '');
+            let translatedText = '';
+            
+            // Traduire chaque phrase
+            for (const sentence of sentences) {
+                const sentenceTranslation = translateSentence(sentence.trim(), sourceLang);
+                translatedText += sentenceTranslation + '. ';
+            }
+            
+            return translatedText.trim();
+        }
+
+        // Fonction pour traduire une phrase
+        function translateSentence(sentence, sourceLang) {
+            const words = sentence.toLowerCase().split(/\s+/);
+            let translatedSentence = '';
+            
+            for (const word of words) {
+                let translatedWord = null;
+                
+                // Chercher le mot dans le dictionnaire
+                for (const entry of dictionnaire) {
+                    if (entry[sourceLang].toLowerCase().includes(word)) {
+                        translatedWord = entry.wolof;
+                        break;
+                    }
+                }
+                
+                // Si le mot n'est pas trouvé, le laisser tel quel entre crochets
+                translatedSentence += (translatedWord || `[${word}]`) + ' ';
+            }
+            
+            return translatedSentence.trim();
+        }
+
+        // Fonction de traduction
+        function translateText() {
+            const sourceLang = sourceLangSelect.value;
+            const text = inputText.value.trim();
+            
+            if (!text) {
+                resultText.textContent = "Veuillez entrer un texte à traduire.";
+                return;
+            }
+            
+            // Afficher un indicateur de chargement
+            resultText.textContent = "Traduction en cours...";
+            
+            // Utiliser setTimeout pour simuler un délai de traitement
+            setTimeout(() => {
+                // Traduire le texte (long ou court)
+                const translation = text.length > 50 
+                    ? translateLongText(text, sourceLang)
+                    : translateSentence(text, sourceLang);
+                
+                if (translation.trim() === "") {
+                    resultText.textContent = "Aucune traduction trouvée.";
+                } else {
+                    resultText.textContent = translation;
+                }
+            }, 500);
+        }
+
+        // Fonction pour lire le texte à voix haute
+        function speakText() {
+            const text = resultText.textContent;
+            
+            if (!text || text === "La traduction apparaîtra ici..." || text === "Traduction en cours..." || text === "Aucune traduction trouvée.") {
+                return;
+            }
+            
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                
+                // Essayer de définir la langue wolof, sinon utiliser une langue par défaut
+                try {
+                    utterance.lang = 'wo-SN'; // Wolof Sénégal
+                } catch (e) {
+                    utterance.lang = 'fr-FR'; // Fallback en français
+                }
+                
+                utterance.rate = 0.8; // Vitesse de parole
+                utterance.pitch = 1; // Ton de la voix
+                
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('La synthèse vocale n\'est pas supportée par votre navigateur.');
+            }
+        }
+
+        // Fonction pour afficher le dictionnaire
+        function displayDictionary(entries = dictionnaire) {
+            dictionaryGrid.innerHTML = "";
+            
+            entries.forEach(entry => {
+                const item = document.createElement('div');
+                item.className = 'dictionary-item';
+                
+                const wolofWord = document.createElement('div');
+                wolofWord.className = 'wolof-word';
+                wolofWord.textContent = entry.wolof;
+                
+                const translation = document.createElement('div');
+                translation.className = 'translation';
+                
+                if (sourceLangSelect.value === 'francais') {
+                    translation.textContent = `Français: ${entry.francais}`;
+                } else {
+                    translation.textContent = `English: ${entry.anglais}`;
+                }
+                
+                item.appendChild(wolofWord);
+                item.appendChild(translation);
+                dictionaryGrid.appendChild(item);
+            });
+        }
+
+        // Fonction de recherche dans le dictionnaire
+        function searchDictionary() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            
+            if (!searchTerm) {
+                displayDictionary();
+                return;
+            }
+            
+            const filteredEntries = dictionnaire.filter(entry => {
+                return entry.wolof.toLowerCase().includes(searchTerm) ||
+                       entry.francais.toLowerCase().includes(searchTerm) ||
+                       entry.anglais.toLowerCase().includes(searchTerm);
+            });
+            
+            displayDictionary(filteredEntries);
+        }
+
+        // Événements
+        translateBtn.addEventListener('click', translateText);
+        
+        inputText.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                translateText();
+            }
+        });
+        
+        voiceBtn.addEventListener('click', () => {
+            if (!recognition) {
+                initSpeechRecognition();
+            }
+            
+            if (isListening) {
+                recognition.stop();
+            } else {
+                recognition.lang = sourceLangSelect.value === 'francais' ? 'fr-FR' : 'en-US';
+                recognition.start();
+            }
+        });
+        
+        speakBtn.addEventListener('click', speakText);
+        
+        sourceLangSelect.addEventListener('change', () => {
+            displayDictionary();
+            
+            // Mettre à jour la langue de reconnaissance vocale si elle est active
+            if (recognition && isListening) {
+                recognition.stop();
+                recognition.lang = sourceLangSelect.value === 'francais' ? 'fr-FR' : 'en-US';
+                setTimeout(() => recognition.start(), 500);
+            }
+        });
+        
+        searchInput.addEventListener('input', searchDictionary);
+
+        // Initialisation
+        displayDictionary();
+        initSpeechRecognition();
+    </script>
 </body>
 </html>
