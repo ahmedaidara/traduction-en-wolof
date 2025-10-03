@@ -315,26 +315,13 @@
                     </svg>
                 </button>
                 
-                <button class="voice-btn" id="voiceBtn">
-                    <span>Parler pour traduire</span>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 15C13.6569 15 15 13.6569 15 12V5C15 3.34315 13.6569 2 12 2C10.3431 2 9 3.34315 9 5V12C9 13.6569 10.3431 15 12 15Z" fill="currentColor"/>
-                        <path d="M19 12C19 15.866 15.866 19 12 19C8.13401 19 5 15.866 5 12" stroke="currentColor" stroke-width="2"/>
-                        <path d="M12 19V22" stroke="currentColor" stroke-width="2"/>
-                    </svg>
-                </button>
+               
             </div>
             
             <div class="result-container">
                 <div class="result-title">
                     <span>Traduction en Wolof</span>
-                    <button class="speak-btn" id="speakBtn" title="Écouter la traduction">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3 9V15H7L12 20V4L7 9H3Z" fill="currentColor"/>
-                            <path d="M16.5 12C16.5 10.23 15.48 8.71 14 7.97V16.02C15.48 15.29 16.5 13.77 16.5 12Z" fill="currentColor"/>
-                            <path d="M19 12C19 8.13 15.87 5 12 5V7C14.76 7 17 9.24 17 12C17 14.76 14.76 17 12 17V19C15.87 19 19 15.87 19 12Z" fill="currentColor"/>
-                        </svg>
-                    </button>
+                   
                 </div>
                 <div class="result-text" id="resultText">La traduction apparaîtra ici...</div>
             </div>
@@ -353,9 +340,7 @@
             </div>
         </section>
         
-        <footer>
-            <p>Traducteur Français/Anglais - Wolof © 2023</p>
-        </footer>
+       
     </div>
 
     <script>
@@ -560,27 +545,55 @@
         }
 
         // Fonction pour traduire une phrase
-        function translateSentence(sentence, sourceLang) {
-            const words = sentence.toLowerCase().split(/\s+/);
-            let translatedSentence = '';
+       // Fonction pour traduire une phrase
+function translateSentence(sentence, sourceLang) {
+    const words = sentence.toLowerCase().split(/\s+/);
+    let translatedSentence = '';
+    
+    for (const word of words) {
+        let translatedWord = null;
+        let bestMatch = null;
+        
+        // Chercher le mot dans le dictionnaire avec correspondance exacte d'abord
+        for (const entry of dictionnaire) {
+            const sourceWords = entry[sourceLang].toLowerCase().split(/\s+/);
             
-            for (const word of words) {
-                let translatedWord = null;
+            // Vérifier si le mot correspond exactement à l'un des mots de la traduction
+            for (const sourceWord of sourceWords) {
+                // Nettoyer le mot (enlever la ponctuation, parenthèses, etc.)
+                const cleanSourceWord = sourceWord.replace(/[.,!?;:()\[\]]/g, '');
+                const cleanInputWord = word.replace(/[.,!?;:()\[\]]/g, '');
                 
-                // Chercher le mot dans le dictionnaire
-                for (const entry of dictionnaire) {
-                    if (entry[sourceLang].toLowerCase().includes(word)) {
+                if (cleanSourceWord === cleanInputWord) {
+                    translatedWord = entry.wolof;
+                    break;
+                }
+            }
+            
+            if (translatedWord) break;
+        }
+        
+        // Si pas de correspondance exacte, chercher une correspondance partielle
+        if (!translatedWord) {
+            for (const entry of dictionnaire) {
+                // Vérifier si le mot est contenu dans la traduction source
+                if (entry[sourceLang].toLowerCase().includes(word)) {
+                    // Vérifier que c'est un mot complet, pas une partie
+                    const regex = new RegExp(`\\b${word}\\b`, 'i');
+                    if (regex.test(entry[sourceLang].toLowerCase())) {
                         translatedWord = entry.wolof;
                         break;
                     }
                 }
-                
-                // Si le mot n'est pas trouvé, le laisser tel quel entre crochets
-                translatedSentence += (translatedWord || `[${word}]`) + ' ';
             }
-            
-            return translatedSentence.trim();
         }
+        
+        // Si le mot n'est pas trouvé, le laisser tel quel entre crochets
+        translatedSentence += (translatedWord || `[${word}]`) + ' ';
+    }
+    
+    return translatedSentence.trim();
+}
 
         // Fonction de traduction
         function translateText() {
@@ -611,31 +624,75 @@
         }
 
         // Fonction pour lire le texte à voix haute
-        function speakText() {
-            const text = resultText.textContent;
-            
-            if (!text || text === "La traduction apparaîtra ici..." || text === "Traduction en cours..." || text === "Aucune traduction trouvée.") {
-                return;
-            }
-            
-            if ('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(text);
-                
-                // Essayer de définir la langue wolof, sinon utiliser une langue par défaut
-                try {
-                    utterance.lang = 'wo-SN'; // Wolof Sénégal
-                } catch (e) {
-                    utterance.lang = 'fr-FR'; // Fallback en français
-                }
-                
-                utterance.rate = 0.8; // Vitesse de parole
-                utterance.pitch = 1; // Ton de la voix
-                
-                window.speechSynthesis.speak(utterance);
-            } else {
-                alert('La synthèse vocale n\'est pas supportée par votre navigateur.');
-            }
+      // Fonction pour lire le texte à voix haute
+function speakText() {
+    const text = resultText.textContent;
+    
+    if (!text || text === "La traduction apparaîtra ici..." || text === "Traduction en cours..." || text === "Aucune traduction trouvée.") {
+        return;
+    }
+    
+    if ('speechSynthesis' in window) {
+        // Arrêter toute parole en cours
+        window.speechSynthesis.cancel();
+        
+        const utterance = new SpeechSynthesisUtterance(text);
+        
+        // Utiliser une voix disponible
+        const voices = window.speechSynthesis.getVoices();
+        
+        // Essayer de trouver une voix française ou anglaise
+        const frenchVoice = voices.find(voice => voice.lang.includes('fr'));
+        const englishVoice = voices.find(voice => voice.lang.includes('en'));
+        
+        // Utiliser la première voix disponible
+        utterance.voice = frenchVoice || englishVoice || voices[0];
+        utterance.lang = frenchVoice ? 'fr-FR' : (englishVoice ? 'en-US' : 'fr-FR');
+        
+        utterance.rate = 0.8;
+        utterance.pitch = 1;
+        utterance.volume = 1;
+        
+        // Gestion des événements pour le débogage
+        utterance.onstart = function() {
+            console.log('Lecture audio démarrée');
+            speakBtn.style.background = '#e74c3c';
+        };
+        
+        utterance.onend = function() {
+            console.log('Lecture audio terminée');
+            speakBtn.style.background = 'var(--accent-color)';
+        };
+        
+        utterance.onerror = function(event) {
+            console.error('Erreur de synthèse vocale:', event);
+            speakBtn.style.background = 'var(--accent-color)';
+            alert('Erreur de lecture audio. Vérifiez que votre navigateur supporte la synthèse vocale.');
+        };
+        
+        window.speechSynthesis.speak(utterance);
+        
+    } else {
+        alert('La synthèse vocale n\'est pas supportée par votre navigateur.');
+    }
+}
+
+// S'assurer que les voix sont chargées
+function loadVoices() {
+    return new Promise((resolve) => {
+        const voices = window.speechSynthesis.getVoices();
+        if (voices.length > 0) {
+            resolve(voices);
+        } else {
+            window.speechSynthesis.onvoiceschanged = () => {
+                resolve(window.speechSynthesis.getVoices());
+            };
         }
+    });
+}
+
+// Charger les voix au démarrage
+loadVoices();
 
         // Fonction pour afficher le dictionnaire
         function displayDictionary(entries = dictionnaire) {
@@ -722,6 +779,11 @@
         // Initialisation
         displayDictionary();
         initSpeechRecognition();
+      
+      // Au chargement de la page
+window.addEventListener('load', function() {
+    loadVoices();
+});
     </script>
 </body>
 </html>
